@@ -1,0 +1,75 @@
+@host=https://j7v71qcfwe.execute-api.us-east-1.amazonaws.com/prod
+@token=eyJraWQiOiI4TTRZaTJkdUhKc3pKZ1krTmNEbStYd2pcLzVCb1JRcVk0MWdVeHVsOUFuZz0iLCJhbGciOiJSUzI1NiJ9.eyJhdF9oYXNoIjoiT082THVoei13cUxnQWxMXzY0MXFlZyIsInN1YiI6IjdkMDg4NjY0LTM1ZWMtNGY3My05MTRkLTU3NThhZmI0YTA1MiIsImNvZ25pdG86Z3JvdXBzIjpbInVzLWVhc3QtMV80aHJWRmdPZUZfR29vZ2xlIl0sImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAudXMtZWFzdC0xLmFtYXpvbmF3cy5jb21cL3VzLWVhc3QtMV80aHJWRmdPZUYiLCJjb2duaXRvOnVzZXJuYW1lIjoiR29vZ2xlXzEwMDg2NTg5NjIwMjM0MzMyMTE5NiIsImF1ZCI6ImV0NWlqdThic290dXA0YWxhNWhjMW51djYiLCJpZGVudGl0aWVzIjpbeyJ1c2VySWQiOiIxMDA4NjU4OTYyMDIzNDMzMjExOTYiLCJwcm92aWRlck5hbWUiOiJHb29nbGUiLCJwcm92aWRlclR5cGUiOiJHb29nbGUiLCJpc3N1ZXIiOm51bGwsInByaW1hcnkiOiJ0cnVlIiwiZGF0ZUNyZWF0ZWQiOiIxNjkzNTgwNzk5NTkyIn1dLCJ0b2tlbl91c2UiOiJpZCIsImF1dGhfdGltZSI6MTY5MzU4MTE4MCwiZXhwIjoxNjkzNTg0NzgwLCJpYXQiOjE2OTM1ODExODAsImp0aSI6IjFmMGEwMDFhLTY3YzItNDczZS1hOGRmLTJmYTA1Yzc2ZTVkNCIsImVtYWlsIjoidG8ucm9nZXJ0QGdtYWlsLmNvbSJ9.CH7dCA2R04poJKPHsN7Tx_tLsSUxzTIP87DHm8-Jesv4GobDN62ra539KMGbG29e8bwlTyLZKob1_QDBnQuOaZ2Nsd3xI7QA-bYwIn2oBrnCumBzBrxGQHtEQJw7VZIf-gGuEhIF76fFOA0dwRRr7JCgOLH9KEklD88u_qo7sZwf4T3yClvfjIpPAq5I1iPvYurXSm76HTSI01lj78UAm7NwTQhTkok3-hNwwqHTuIRVgJAY2KW4ip35FSaUXK5ruJX6_-jUNiWQpx07E_uerg2xk5DuZ_RHwSCMlCcdhpRGAcO3zVejjbvgehAFl2FEEkYzO59fM2BfJTFrAF42Vw
+
+###
+GET {{host}}/seed
+Content-Type: application/json
+x-api-key: GTPCHup9z53K19AA1hSxa6hAcmARQp7C8Wzb1LhC
+
+###
+GET {{host}}/drain
+Content-Type: application/json
+x-api-key: GTPCHup9z53K19AA1hSxa6hAcmARQp7C8Wzb1LhC
+
+
+
+
+###
+POST {{host}}/site/site-3/create-site
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "name": "my third site",
+  "userId": "admin"
+}
+
+###
+POST {{host}}/post/post-3/create-post
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "siteId": "site-2",
+  "title": "my third post",
+  "userId": "admin",
+  "published": false
+}
+
+###
+POST {{host}}/post/post-3/update-post
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "slug": "third-post"
+}
+
+###
+POST {{host}}/post/post-1/update-post
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "published": true
+}
+
+###
+GET {{host}}/site/site-1
+Content-Type: application/json
+Authorization: {{token}}
+
+###
+GET {{host}}/sites?limit=10
+Content-Type: application/json
+Authorization: {{token}}
+
+###
+GET {{host}}/posts?limit=10&where=siteId+eq+site-1
+Content-Type: application/json
+Authorization: {{token}}
+
+###
+GET {{host}}/posts?limit=10&where=siteId+eq+site-1&where=published+eq+true
+Content-Type: application/json
+Authorization: {{token}}
