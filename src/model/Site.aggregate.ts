@@ -24,7 +24,10 @@ export const Site = (stream: string): InferAggregate<typeof SiteSchemas> => ({
     userId: "",
   }),
   reduce: {
-    SiteCreated: (_, { data }) => data,
+    SiteCreated: (_, { data, metadata }) => ({
+      ...data,
+      userId: metadata.causation.command?.actor?.id,
+    }),
     SiteUpdated: (_, { data }) => data,
     SiteDeleted: () => ({ deleted: true }),
   },

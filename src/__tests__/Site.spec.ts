@@ -52,7 +52,6 @@ describe("Site aggregate with projections", () => {
       "CreateSite",
       {
         name: "TestSite",
-        userId: targetSite.actor.id,
         description: "TestSiteDesc",
       },
       targetSite
@@ -70,7 +69,6 @@ describe("Site aggregate with projections", () => {
       "CreatePost",
       {
         siteId: targetSite.stream,
-        userId,
         title: "First Post",
         published: false,
       },
@@ -81,7 +79,6 @@ describe("Site aggregate with projections", () => {
       "CreatePost",
       {
         siteId: targetSite.stream,
-        userId,
         title: "Second Post",
         published: false,
       },
@@ -122,25 +119,25 @@ describe("Site aggregate with projections", () => {
 
     expect(siteSnap.state).toEqual({
       description: "Just a new description",
+      userId,
       font: "",
       name: "TestSite",
-      userId,
     })
     expect(postSnap1.state).toEqual({
+      userId,
       slug: targetPost1.stream,
       content: "Some content",
       description: "Describes my first post",
       published: false,
       title: "Better title",
-      userId,
       siteId: targetSite.stream,
     })
     expect(postSnap2.state).toEqual({
+      userId,
       slug: "just-change-the-slug",
       description: "Slug changed",
       published: false,
       title: "Second Post",
-      userId,
       siteId: targetSite.stream,
     })
 

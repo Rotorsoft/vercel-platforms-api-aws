@@ -21,7 +21,6 @@ Authorization: {{token}}
 
 {
   "name": "my third site",
-  "userId": "admin"
 }
 
 ###
@@ -32,7 +31,6 @@ Authorization: {{token}}
 {
   "siteId": "site-2",
   "title": "my third post",
-  "userId": "admin",
   "published": false
 }
 

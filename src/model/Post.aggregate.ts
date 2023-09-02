@@ -26,7 +26,11 @@ export const Post = (stream: string): InferAggregate<typeof PostSchemas> => ({
     published: false,
   }),
   reduce: {
-    PostCreated: (_, { stream, data }) => ({ ...data, slug: stream }),
+    PostCreated: (_, { stream, data, metadata }) => ({
+      ...data,
+      slug: stream,
+      userId: metadata.causation.command?.actor?.id,
+    }),
     PostUpdated: (_, { data }) => data,
     PostDeleted: () => ({ deleted: true }),
   },
