@@ -60,9 +60,9 @@ export class EventuallyApp extends Construct {
       selfSignUpEnabled: false,
       signInAliases: { email: true, phone: true },
       standardAttributes: {
-        email: { mutable: false },
-        givenName: { mutable: true },
-        familyName: { mutable: true },
+        email: { required: true, mutable: true },
+        givenName: { required: true, mutable: true },
+        familyName: { required: true, mutable: true },
       },
     })
     const authorizer = new apigw.CognitoUserPoolsAuthorizer(

@@ -1,7 +1,13 @@
 {
   "name": "cdk-app",
+  "description": "Platforms API",
   "version": "0.1.0",
   "bin": "bin/cdk-app.js",
+  "author": {
+    "name": "rotorsoft",
+    "email": "to.rotorsoft@gmail.com"
+  },
+  "license": "MIT",
   "scripts": {
     "build": "tsc",
     "test": "jest",
@@ -20,9 +26,9 @@
     "ts-jest": "^29.1.1"
   },
   "dependencies": {
-    "@rotorsoft/eventually": "^5.7.11",
-    "@rotorsoft/eventually-aws": "^0.1.7",
-    "@rotorsoft/eventually-pg": "^5.5.12",
+    "@rotorsoft/eventually": "^5.7.12",
+    "@rotorsoft/eventually-aws": "^0.1.8",
+    "@rotorsoft/eventually-pg": "^5.5.13",
     "aws-cdk-lib": "2.93.0",
     "constructs": "^10.2.70"
   }
