@@ -59,11 +59,6 @@ export class EventuallyApp extends Construct {
     const userPool = new cognito.UserPool(this, "UserPool", {
       selfSignUpEnabled: false,
       signInAliases: { email: true, phone: true },
-      standardAttributes: {
-        email: { required: true, mutable: true },
-        givenName: { required: true, mutable: true },
-        familyName: { required: true, mutable: true },
-      },
     })
     const authorizer = new apigw.CognitoUserPoolsAuthorizer(
       this,
