@@ -26,8 +26,8 @@
     "ts-jest": "^29.1.1"
   },
   "dependencies": {
-    "@rotorsoft/eventually": "^5.7.12",
-    "@rotorsoft/eventually-aws": "^0.1.8",
+    "@rotorsoft/eventually": "^5.7.15",
+    "@rotorsoft/eventually-aws": "^0.1.9",
     "@rotorsoft/eventually-pg": "^5.5.13",
     "aws-cdk-lib": "2.93.0",
     "constructs": "^10.2.70"
