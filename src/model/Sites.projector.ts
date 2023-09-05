@@ -1,4 +1,4 @@
-import { InferProjector, prj } from "@rotorsoft/eventually"
+import { client, InferProjector, prj } from "@rotorsoft/eventually"
 import { SitesSchemas } from "./schemas/Sites"
 
 export const Sites = (): InferProjector<typeof SitesSchemas> => ({
@@ -14,8 +14,18 @@ export const Sites = (): InferProjector<typeof SitesSchemas> => ({
         createdAt: created,
         updatedAt: created,
       }),
-    SiteUpdated: ({ created, stream, data }) =>
-      prj({ ...data, id: stream, updatedAt: created }),
+    SiteUpdated: async ({ created, stream, data }, map) => {
+      // get current state to make sure we don't miss any required fields
+      const state = map.records.get(stream) ??
+        (await client().read(Sites, stream)).at(0)?.state ?? {
+          id: stream,
+          userId: "-",
+          font: "",
+          createdAt: created,
+          updatedAt: created,
+        }
+      return prj({ ...data, id: stream, updatedAt: created })
+    },
     SiteDeleted: ({ stream }) => prj({ id: stream }),
   },
 })
