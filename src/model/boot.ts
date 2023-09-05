@@ -1,4 +1,10 @@
-import { Builder, app, store } from "@rotorsoft/eventually"
+import {
+  Builder,
+  InMemoryBroker,
+  app,
+  broker,
+  store,
+} from "@rotorsoft/eventually"
 import { PostgresProjectorStore, PostgresStore } from "@rotorsoft/eventually-pg"
 import { Posts } from "./Posts.projector"
 import { Site } from "./Site.aggregate"
@@ -26,5 +32,10 @@ export const boot = (): Builder => {
     })
     .with(DeleteSitePosts)
     .build()
+
+  // TODO: control drain with options
+  // unsubscribed broker, commands will drain
+  broker(InMemoryBroker({ subscribed: false }))
+
   return app()
 }
