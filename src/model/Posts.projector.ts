@@ -1,4 +1,4 @@
-import { client, InferProjector, prj } from "@rotorsoft/eventually"
+import { InferProjector, prj } from "@rotorsoft/eventually"
 import { PostsSchemas } from "./schemas/Posts"
 
 export const Posts = (): InferProjector<typeof PostsSchemas> => ({
@@ -17,19 +17,13 @@ export const Posts = (): InferProjector<typeof PostsSchemas> => ({
         updatedAt: created,
       }),
     PostUpdated: async ({ created, stream, data }, map) => {
-      // get current state to make sure we don't miss any required fields
-      const state = map.records.get(stream) ??
-        (await client().read(Posts, stream)).at(0)?.state ?? {
-          id: stream,
-          slug: stream,
-          siteId: "-",
-          userId: "-",
-          title: data.title ?? "-",
-          published: false,
-          createdAt: created,
-          updatedAt: created,
-        }
-      return prj({ ...state, ...data, id: stream, updatedAt: created })
+      // bulk update option: sends patches when not found in map!
+      const record = map.records.get(stream)
+      if (!record)
+        return prj({ ...data, updatedAt: created, where: { id: stream } })
+
+      // record was created in this batch, so let's just patch it in place
+      return prj({ ...record, ...data, id: stream })
     },
     PostDeleted: ({ stream }) => prj({ id: stream }),
   },

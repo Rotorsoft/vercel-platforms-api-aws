@@ -97,7 +97,7 @@ export class EventuallyApp extends Construct {
             .addResource(decamelize(art.factory.name), {
               defaultCorsPreflightOptions: { allowOrigins: ["*"] },
             })
-            .addMethod("GET", queryLambda, withAuth)
+            .addMethod("GET", queryLambda, withKey)
           break
       }
     })

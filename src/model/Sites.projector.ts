@@ -15,7 +15,7 @@ export const Sites = (): InferProjector<typeof SitesSchemas> => ({
         updatedAt: created,
       }),
     SiteUpdated: async ({ created, stream, data }, map) => {
-      // get current state to make sure we don't miss any required fields
+      // record upsert option: needs current state to make sure all required fields are included
       const state = map.records.get(stream) ??
         (await client().read(Sites, stream)).at(0)?.state ?? {
           id: stream,
@@ -24,7 +24,7 @@ export const Sites = (): InferProjector<typeof SitesSchemas> => ({
           createdAt: created,
           updatedAt: created,
         }
-      return prj({ ...data, id: stream, updatedAt: created })
+      return prj({ ...state, ...data, id: stream, updatedAt: created })
     },
     SiteDeleted: ({ stream }) => prj({ id: stream }),
   },
