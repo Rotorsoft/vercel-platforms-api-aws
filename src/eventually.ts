@@ -1,12 +1,15 @@
 import { ArtifactMetadata, decamelize } from "@rotorsoft/eventually"
+import { Duration } from "aws-cdk-lib"
 import * as apigw from "aws-cdk-lib/aws-apigateway"
 import * as cognito from "aws-cdk-lib/aws-cognito"
+import { SecurityGroup, SubnetType, Vpc } from "aws-cdk-lib/aws-ec2"
 import * as lambda from "aws-cdk-lib/aws-lambda"
 import * as nodejs from "aws-cdk-lib/aws-lambda-nodejs"
 //import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
 import { Construct } from "constructs"
 
 interface Props {
+  vpc: Vpc
   environment: Record<string, string>
   artifacts: ArtifactMetadata[]
 }
@@ -14,27 +17,39 @@ interface Props {
 const lambdaIntegration = (
   scope: Construct,
   handler: string,
+  vpc: Vpc,
+  sg: SecurityGroup,
   environment: Record<string, string>
 ): apigw.LambdaIntegration =>
   new apigw.LambdaIntegration(
     new nodejs.NodejsFunction(scope, handler, {
-      runtime: lambda.Runtime.NODEJS_18_X,
+      runtime: lambda.Runtime.NODEJS_16_X,
       environment,
+      timeout: Duration.seconds(10),
       bundling: {
-        externalModules: ["@rotorsoft/*", "zod"],
+        externalModules: ["aws-sdk", "zod"],
         nodeModules: [
           "@rotorsoft/eventually",
           "@rotorsoft/eventually-aws",
           "@rotorsoft/eventually-pg",
         ],
       },
+      vpc,
+      vpcSubnets: vpc.selectSubnets({
+        subnetType: SubnetType.PRIVATE_ISOLATED,
+      }),
+      securityGroups: [sg],
     })
   )
 
 export class EventuallyApp extends Construct {
   // public readonly store: dynamodb.Table;
 
-  constructor(scope: Construct, id: string, { environment, artifacts }: Props) {
+  constructor(
+    scope: Construct,
+    id: string,
+    { vpc, environment, artifacts }: Props
+  ) {
     super(scope, id)
 
     // seed from here?
@@ -48,11 +63,18 @@ export class EventuallyApp extends Construct {
     })
 
     // lambdas
-    const loadLambda = lambdaIntegration(this, "load", environment)
-    const commandLambda = lambdaIntegration(this, "command", environment)
-    const queryLambda = lambdaIntegration(this, "query", environment)
-    const seedLambda = lambdaIntegration(this, "seed", environment)
-    const drainLambda = lambdaIntegration(this, "drain", environment)
+    const sg = new SecurityGroup(this, "LambdaSG", { vpc })
+    const loadLambda = lambdaIntegration(this, "load", vpc, sg, environment)
+    const commandLambda = lambdaIntegration(
+      this,
+      "command",
+      vpc,
+      sg,
+      environment
+    )
+    const queryLambda = lambdaIntegration(this, "query", vpc, sg, environment)
+    const seedLambda = lambdaIntegration(this, "seed", vpc, sg, environment)
+    const drainLambda = lambdaIntegration(this, "drain", vpc, sg, environment)
 
     // auth
     const withKey = { apiKeyRequired: true }
